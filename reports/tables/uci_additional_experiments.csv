@@ -1,0 +1,4 @@
+﻿experiment,accuracy,precision_macro,recall_macro,f1_macro,precision_weighted,recall_weighted,f1_weighted,roc_auc_ovr_macro,fail_precision,fail_recall,fail_roc_auc
+"Portuguese course, early features (first-period grade)",0.762,0.731,0.659,0.682,0.746,0.762,0.742,0.886,0.875,0.7,0.963
+"Portuguese course, adding the second-period grade",0.831,0.827,0.768,0.793,0.828,0.831,0.825,0.956,0.882,0.75,0.99
+"Mathematics course (395 students), early features: robustness check",0.709,0.705,0.673,0.683,0.706,0.709,0.703,0.896,0.769,0.769,0.919

@@ -1,0 +1,3 @@
+﻿flag_rule,students_flagged,share_flagged_pct,failing_students_caught,failing_students_total,recall,precision
+High risk only,112,25.3,70,86,0.814,0.625
+High or Medium risk (alert raised),156,35.3,77,86,0.895,0.494

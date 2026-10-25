@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local database and its signing key (rebuilt by scripts). The deployed model and the built
+# web interface ARE committed, so the demo laptop needs no training run and no Node.js.
+backend/data/*.db
+backend/data/secret.key
+backend/artifacts/model_v*.joblib
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Word lock files
+~$*.docx
+
+backend/data/*.db-*

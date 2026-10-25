@@ -1,0 +1,6 @@
+﻿test,statistic,p_value,n,decision
+Spearman correlation: attendance and semester GPA,0.5172371910126945,2.616711747186211e-144,2104,Reject H0
+Spearman correlation: CA score and semester GPA,0.7900794941895357,0.0,2104,Reject H0
+Multiple regression of semester GPA on attendance and CA score: overall F-test (R-squared = 0.636; coefficients +0.0161 and +0.0486),1839.2447792113057,0.0,2104,Reject H0
+Kruskal-Wallis: attendance across the performance classes,485.58918533425566,6.333070939339864e-105,2104,Reject H0
+Kruskal-Wallis: CA score across the performance classes,1175.0028235824107,1.944049890285306e-254,2104,Reject H0

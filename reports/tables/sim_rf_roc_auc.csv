@@ -1,0 +1,5 @@
+﻿class,roc_auc
+Distinction,0.899
+Merit,0.752
+Pass,0.811
+Fail,0.93

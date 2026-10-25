@@ -1,0 +1,5 @@
+﻿class,precision,recall,f1,support
+Distinction,0.733,0.688,0.71,16
+Merit,0.538,0.304,0.389,23
+Pass,0.779,0.944,0.854,71
+Fail,0.875,0.7,0.778,20

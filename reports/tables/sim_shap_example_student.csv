@@ -1,0 +1,6 @@
+﻿feature,value,contribution,label
+ca_score,50.6,0.2083,CA score (%)
+prior_gpa,2.0,0.1736,Previous GPA
+assignment_score,50.2,0.0991,Assignment score (%)
+attendance_pct,65.8,0.0848,Attendance (%)
+level,HND1,-0.005,Level

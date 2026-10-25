@@ -1,0 +1,7 @@
+﻿variable,n,mean,sd,min,q1,median,q3,max
+Absences,649,3.66,4.64,0,0.0,2.0,6.0,32
+First-period grade (%),649,57.0,13.73,0,50.0,55.0,65.0,95
+Second-period grade (%),649,57.85,14.57,0,50.0,55.0,65.0,95
+Past failures,649,0.22,0.59,0,0.0,0.0,0.0,3
+Weekly study time (band 1-4),649,1.93,0.83,1,1.0,2.0,2.0,4
+Final grade (%),649,59.53,16.15,0,50.0,60.0,70.0,95

@@ -1,0 +1,6 @@
+﻿setting,value
+class_weight,
+max_depth,
+max_features,sqrt
+min_samples_leaf,5
+n_estimators,300

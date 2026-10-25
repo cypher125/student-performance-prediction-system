@@ -1,0 +1,5 @@
+﻿n_features,features,cv_f1_macro_mean,cv_f1_macro_sd,selected
+1,First-period grade (%),0.6601,0.0665,True
+2,"First-period grade (%), Absences",0.6318,0.0556,False
+3,"First-period grade (%), Absences, Past failures",0.6216,0.068,False
+4,"First-period grade (%), Absences, Past failures, Weekly study time",0.6616,0.0423,False

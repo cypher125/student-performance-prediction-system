@@ -1,0 +1,6 @@
+﻿feature,label,impurity,permutation_mean,permutation_std,shap_fail,rank_impurity,rank_permutation_mean,rank_shap_fail
+ca_score,CA score (%),0.385,0.2075,0.0233,0.1533,1,1,1
+prior_gpa,Previous GPA,0.2176,0.074,0.0218,0.081,2,2,2
+assignment_score,Assignment score (%),0.1941,0.0255,0.0122,0.0647,3,3,3
+attendance_pct,Attendance (%),0.1578,-0.0138,0.0095,0.0434,4,4,4
+level,Level,0.0455,-0.0226,0.0112,0.0234,5,5,5

@@ -1,0 +1,6 @@
+﻿n_features,features,cv_f1_macro_mean,cv_f1_macro_sd,selected
+1,CA score (%),0.5139,0.0241,False
+2,"CA score (%), Previous GPA",0.5582,0.0194,False
+3,"CA score (%), Previous GPA, Assignment score (%)",0.5769,0.031,False
+4,"CA score (%), Previous GPA, Assignment score (%), Attendance (%)",0.5972,0.0448,False
+5,"CA score (%), Previous GPA, Assignment score (%), Attendance (%), Level",0.6116,0.0415,True

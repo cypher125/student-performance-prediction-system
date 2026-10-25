@@ -1,0 +1,92 @@
+{
+  "version": "1.0.0",
+  "algorithm": "Random Forest (scikit-learn)",
+  "trained_on": "2026-10-23",
+  "dataset": {
+    "file": "yabatech_simulated_clean.csv",
+    "records": 2208,
+    "sha256": "a70a8243de25cf39520ac7a432803f55a6a80ce70806859650b0e1053161c8ff",
+    "kind": "simulated"
+  },
+  "features": [
+    "ca_score",
+    "prior_gpa",
+    "assignment_score",
+    "attendance_pct",
+    "level"
+  ],
+  "feature_labels": {
+    "ca_score": "CA score (%)",
+    "prior_gpa": "Previous GPA",
+    "assignment_score": "Assignment score (%)",
+    "attendance_pct": "Attendance (%)",
+    "level": "Level"
+  },
+  "classes": [
+    "Distinction",
+    "Merit",
+    "Pass",
+    "Fail"
+  ],
+  "settings": {
+    "class_weight": "balanced",
+    "max_depth": 10,
+    "max_features": "sqrt",
+    "min_samples_leaf": 1,
+    "n_estimators": 300
+  },
+  "test_metrics": {
+    "accuracy": 0.6041,
+    "precision_macro": 0.5653,
+    "recall_macro": 0.6035,
+    "f1_macro": 0.5785,
+    "precision_weighted": 0.6143,
+    "recall_weighted": 0.6041,
+    "f1_weighted": 0.6038,
+    "roc_auc_ovr_macro": 0.8482,
+    "fail_precision": 0.625,
+    "fail_recall": 0.814,
+    "fail_roc_auc": 0.9304
+  },
+  "evaluation_note": "Metrics come from the 80/20 held-out test split; the saved model was then refit on all records.",
+  "risk_rule": {
+    "high_if_fail_probability_at_least": 0.5,
+    "medium_if_fail_probability_at_least": 0.25,
+    "alert_levels": [
+      "High",
+      "Medium"
+    ]
+  },
+  "feature_importance": [
+    {
+      "feature": "ca_score",
+      "impurity": 0.385,
+      "permutation_mean": 0.2075,
+      "shap_fail": 0.1533
+    },
+    {
+      "feature": "prior_gpa",
+      "impurity": 0.2176,
+      "permutation_mean": 0.074,
+      "shap_fail": 0.081
+    },
+    {
+      "feature": "assignment_score",
+      "impurity": 0.1941,
+      "permutation_mean": 0.0255,
+      "shap_fail": 0.0647
+    },
+    {
+      "feature": "attendance_pct",
+      "impurity": 0.1578,
+      "permutation_mean": -0.0138,
+      "shap_fail": 0.0434
+    },
+    {
+      "feature": "level",
+      "impurity": 0.0455,
+      "permutation_mean": -0.0226,
+      "shap_fail": 0.0234
+    }
+  ]
+}

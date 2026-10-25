@@ -1,0 +1,5 @@
+﻿feature,value,contribution,label
+ca1_score,35,0.4927,First-period grade (%)
+past_failures,2,0.1351,Past failures
+absences,4,-0.0469,Absences
+study_time,2,-0.0084,Weekly study time

@@ -1,0 +1,6 @@
+﻿test,statistic,p_value,n,decision
+Spearman correlation: absences and final grade,-0.15851002809372583,4.9919385182026236e-05,649,Reject H0
+Spearman correlation: first-period grade and final grade,0.8832876374956354,4.987374514659753e-215,649,Reject H0
+Multiple regression of final grade on absences and first-period grade: overall F-test (R-squared = 0.684; coefficients +0.1075 and +0.9779),698.6647882136095,2.922760527386273e-162,649,Reject H0
+Kruskal-Wallis: absences across the performance classes,10.897353983096,0.012294069453241685,649,Reject H0
+Kruskal-Wallis: first-period grade across the performance classes,419.88834334702364,1.0887855406591342e-90,649,Reject H0

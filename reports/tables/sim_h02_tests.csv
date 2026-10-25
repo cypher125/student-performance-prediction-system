@@ -1,0 +1,3 @@
+﻿test,model_value,reference_value,p_value,decision
+Permutation test: cross-validated accuracy against 100 runs on shuffled labels,0.6160672844544741,0.28201611689953743,0.009900990099009901,Reject H0
+One-sided binomial test: test-set accuracy against the majority-class rate,0.6040723981900452,0.44960362400906,5.0682390481094716e-11,Reject H0

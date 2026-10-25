@@ -1,0 +1,5 @@
+﻿feature,label,impurity,permutation_mean,permutation_std,shap_fail,rank_impurity,rank_permutation_mean,rank_shap_fail
+ca1_score,First-period grade (%),0.7743,0.4518,0.0294,0.1493,1,1,1
+absences,Absences,0.1107,-0.0125,0.0235,0.0151,2,4,4
+past_failures,Past failures,0.0671,0.0212,0.0113,0.0494,3,2,2
+study_time,Weekly study time,0.0478,-0.0069,0.0092,0.0163,4,3,3

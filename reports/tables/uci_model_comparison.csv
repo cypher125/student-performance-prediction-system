@@ -1,0 +1,8 @@
+﻿model,accuracy,precision_macro,recall_macro,f1_macro,precision_weighted,recall_weighted,f1_weighted,roc_auc_ovr_macro,fail_precision,fail_recall,fail_roc_auc,cv_accuracy_mean,cv_accuracy_sd,cv_f1_macro_mean,cv_f1_macro_sd,tuned_settings
+Logistic Regression,0.777,0.773,0.687,0.715,0.771,0.777,0.761,0.903,0.857,0.6,0.96,0.722,0.066,0.655,0.074,C=10.0
+Decision Tree,0.769,0.772,0.66,0.701,0.769,0.769,0.758,0.879,0.875,0.7,0.908,0.724,0.06,0.655,0.061,max_depth=3; min_samples_leaf=1
+Random Forest,0.762,0.731,0.659,0.682,0.746,0.762,0.742,0.886,0.875,0.7,0.963,0.724,0.043,0.662,0.042,class_weight=None; max_depth=None; max_features=sqrt; min_samples_leaf=5
+Support Vector Machine,0.708,0.655,0.607,0.624,0.693,0.708,0.696,0.867,0.75,0.75,0.952,0.684,0.059,0.625,0.066,estimator__C=5.0
+k-Nearest Neighbours,0.638,0.59,0.59,0.588,0.64,0.638,0.638,0.798,0.583,0.7,0.9,0.674,0.075,0.623,0.102,n_neighbors=11; weights=distance
+Naive Bayes,0.285,0.404,0.447,0.309,0.473,0.285,0.248,0.766,0.882,0.75,0.976,0.306,0.034,0.314,0.088,defaults
+Majority-class baseline,0.546,0.137,0.25,0.177,0.298,0.546,0.386,0.5,0.0,0.0,0.5,0.547,0.002,0.177,0.0,defaults

@@ -1,0 +1,9 @@
+﻿step,records_affected,records_remaining
+Records received,2264,2264
+"Level, semester and session labels standardised",179,2264
+Records with impossible values blanked (out of range or not a number),5,2264
+"Records removed: missing or unrecognised student code, level, semester or session",0,2264
+"Duplicate records removed (same student, level, session and semester)",27,2237
+"Records removed: no semester GPA, so the outcome is unknown",12,2225
+"Records removed: two or more of attendance, CA and assignment missing",17,2208
+Clean records,2208,2208
