@@ -1,0 +1,6 @@
+# Not uploaded to Vercel: local builds, dependencies and settings
+.next
+out
+node_modules
+*.tsbuildinfo
+.env*

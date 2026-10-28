@@ -2,17 +2,19 @@
 
 HND Computer Science project, Yaba College of Technology (YABATECH), Lagos.
 
+**Live demo:** https://student-performance-prediction-hazel.vercel.app (simulated data; the demonstration accounts are listed on the sign-in page). It runs on Modal and Vercel, as described in [docs/cloud.md](docs/cloud.md).
+
 The system predicts each student's performance class (Distinction, Merit, Pass or Fail) **before final examinations**, from attendance, continuous assessment (CA), assignments, previous GPA and level. It explains each prediction with SHAP, flags students at risk of failing, recommends what to do, and keeps a log of interventions. Lecturers, advisers, students and administrators each get their own dashboard.
 
 | Layer | Technology |
 |---|---|
-| Web interface | Next.js 16 (React, TypeScript, Tailwind CSS, Recharts), built as static pages |
+| Web interface | Next.js 16 (React, TypeScript, Tailwind CSS, Recharts), built as static pages (or on Vercel, a Next.js app that forwards the API to Modal) |
 | Backend API and model | FastAPI (Python) with a scikit-learn Random Forest and SHAP |
 | Database | SQLite through SQLAlchemy (PostgreSQL-ready) |
 
 ## Quick start (Windows)
 
-1. Install **Python 3.11 or later** from python.org (tick "Add Python to PATH").
+1. Install **Python 3.12 or later** from python.org (tick "Add Python to PATH").
 2. Double-click **`setup.bat`** once. It installs the packages and creates the demo database.
 3. Double-click **`start.bat`**. The system opens at **http://localhost:8000**.
 
@@ -22,6 +24,8 @@ The system predicts each student's performance class (Distinction, Merit, Pass o
 | Lecturer | `lecturer` | `Lecturer@2026` |
 | Academic adviser | `adviser` | `Adviser@2026` |
 | Student | student code in lower case, e.g. `s0379` | `Student@2026` |
+
+All the students and records in the demonstration are **simulated**; every matric number starts with `SIM/`.
 
 The trained model (`backend/artifacts/model.joblib`) and the built interface (`frontend/out`) are included, so the system runs without a training run or Node.js. The full guide is in [docs/user-guide.md](docs/user-guide.md).
 
@@ -54,7 +58,7 @@ backend/
   tools/           Chapter 3 diagrams and Chapter 4 screenshots
   artifacts/       the deployed model and its metadata
   data/            raw UCI files, simulated data, processed datasets, and the SQLite database
-  tests/           94 automated tests (pytest)
+  tests/           97 automated tests (pytest)
 frontend/
   app/             Next.js pages: login, dashboard, students, records, alerts, reports, model, users, account
   components/      shared UI and charts
@@ -64,21 +68,22 @@ reports/
   figures/         charts and diagrams for Chapters 3 and 4
   tables/          CSV tables for Chapter 4 (every chart has a table twin)
   screenshots/     screenshots of every screen for Chapter 4
-docs/              write-up support (see below)
+deploy/            the cloud deployment (Modal)
+docs/              datasets, user guide, tests, cloud notes (see below)
 setup.bat, start.bat
 ```
 
-## Documents for the write-up
+## Documents
 
 | File | What it is |
 |---|---|
-| [docs/write-up-updates.md](docs/write-up-updates.md) | Replacement text for Chapters 1–3, and references that **must** be fixed |
-| [docs/chapter4-5-guide.md](docs/chapter4-5-guide.md) | Outline of Chapters 4 and 5, mapping every figure and table to a section |
-| [docs/defence-brief.md](docs/defence-brief.md) | What to say at the defence, a demo script, and likely questions with answers |
+| [docs/datasets.md](docs/datasets.md) | Both datasets, the simulation design and the cleaning steps |
+| [docs/user-guide.md](docs/user-guide.md) | Installation and user manual |
 | [docs/test-cases.md](docs/test-cases.md) | Unit and system test cases with results |
 | [docs/uat-questionnaire.md](docs/uat-questionnaire.md) | User acceptance test questionnaire (Technology Acceptance Model) |
-| [docs/datasets.md](docs/datasets.md) | Both datasets, the simulation design and the cleaning steps |
-| [docs/user-guide.md](docs/user-guide.md) | Installation and user manual (appendix) |
+| [docs/cloud.md](docs/cloud.md) | The online deployment on Modal and Vercel |
+
+The write-up drafts (`docs/write-up-updates.md`, `docs/chapter4-5-guide.md`), the defence brief and the four presentation PDFs (`docs/presentation/`) are kept out of the public repository until the project report has been submitted.
 
 ## Commands (from `backend`, using `.venv\Scripts\python.exe`)
 
@@ -89,6 +94,9 @@ setup.bat, start.bat
 | Reset the demo database | `-m app.seed --reset` |
 | Run the system | `-m uvicorn app.main:app --port 8000` |
 | Run the tests | `-m pytest` |
-| Redraw the diagrams and retake the screenshots | `-m tools.diagrams`, `-m tools.screenshots` |
+| Redraw the Chapter 3 diagrams | `-m tools.diagrams` |
+| Start afresh for real records (one admin account, no demo data) | `-m app.seed --reset --empty` |
 
-Every result is reproducible: the random seed is fixed (`SEED = 42` in `backend/ml/config.py`). The interactive API documentation is at http://localhost:8000/docs.
+Every result is reproducible: the random seed is fixed (`SEED = 42` in `backend/ml/config.py`). The interactive API documentation is at http://localhost:8000/docs. Settings are listed in `backend/.env.example`.
+
+The screenshots (`reports/screenshots`) are retaken with `python backend/tools/screenshots.py` from the project folder. It needs Playwright and Microsoft Edge, rebuilds the demo database before and after, and starts its own server on port 8010.
