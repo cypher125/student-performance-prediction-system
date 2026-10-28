@@ -1,8 +1,8 @@
 "use client";
 
-import { BrainCircuit } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { SiteFooter, TopBar } from "@/components/topbar";
 import { Button, ErrorNote, Field, Input } from "@/components/ui";
 import { api, ApiError } from "@/lib/api";
 
@@ -34,39 +34,42 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand text-white"><BrainCircuit size={24} aria-hidden /></div>
-          <div>
-            <h1 className="text-xl font-semibold">Student Performance Prediction System</h1>
-            <p className="text-sm text-ink-2">Department of Computer Science, YABATECH</p>
-          </div>
+    <div className="flex min-h-screen flex-col">
+      <TopBar right={<p className="hidden text-sm text-white/80 md:block">Department of Computer Science</p>} />
+      <main className="flex flex-1 justify-center px-4 py-10 sm:py-14">
+        <div className="w-full max-w-md">
+          <section className="rounded border border-line bg-surface">
+            <div className="border-b border-line bg-panel px-6 py-5 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element -- static export serves files as they are */}
+              <img src="/crest.png" alt="Yaba College of Technology crest" className="mx-auto h-16 w-16" />
+              <h1 className="mt-3 text-lg font-semibold">Sign in</h1>
+              <p className="mt-1 text-sm text-ink-2">Use the username and password given to you by the department.</p>
+            </div>
+            <form onSubmit={submit} className="space-y-4 px-6 py-5">
+              {error && <ErrorNote message={error} />}
+              <Field label="Username">
+                <Input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required autoFocus />
+              </Field>
+              <Field label="Password">
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
+              </Field>
+              <Button type="submit" busy={busy} className="w-full">Sign in</Button>
+            </form>
+          </section>
+
+          <details className="mt-4 rounded border border-line bg-surface px-4 py-3 text-sm">
+            <summary className="cursor-pointer font-medium">Demo accounts (simulated data)</summary>
+            <table className="mt-3 w-full text-left text-xs">
+              <tbody className="divide-y divide-line-soft">
+                {DEMO.map(([role, user, pass]) => (
+                  <tr key={role}><td className="py-1.5 pr-2 text-ink-2">{role}</td><td className="py-1.5 pr-2 font-mono">{user}</td><td className="py-1.5 font-mono">{pass}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </div>
-
-        <form onSubmit={submit} className="space-y-4 rounded-xl border border-line bg-surface p-6">
-          <h2 className="text-base font-semibold">Sign in</h2>
-          {error && <ErrorNote message={error} />}
-          <Field label="Username">
-            <Input value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" required autoFocus />
-          </Field>
-          <Field label="Password">
-            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
-          </Field>
-          <Button type="submit" busy={busy} className="w-full">Sign in</Button>
-        </form>
-
-        <details className="mt-4 rounded-xl border border-line bg-surface p-4 text-sm">
-          <summary className="cursor-pointer font-medium">Demo accounts (simulated data)</summary>
-          <table className="mt-3 w-full text-left text-xs">
-            <tbody className="divide-y divide-line">
-              {DEMO.map(([role, user, pass]) => (
-                <tr key={role}><td className="py-1.5 pr-2 text-ink-2">{role}</td><td className="py-1.5 pr-2 font-mono">{user}</td><td className="py-1.5 font-mono">{pass}</td></tr>
-              ))}
-            </tbody>
-          </table>
-        </details>
-      </div>
+      </main>
+      <SiteFooter />
     </div>
   );
 }

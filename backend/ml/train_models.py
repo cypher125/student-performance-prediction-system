@@ -1,8 +1,8 @@
 """Train, tune, evaluate and explain the models, then save the web app's model.
 
 Run from the backend folder:  python -m ml.train_models
-On a 2-CPU laptop it takes roughly 15-25 minutes. It writes tables and figures to
-reports/ and the deployed model to backend/artifacts/.
+On a 2-CPU laptop it takes about 40 minutes. It writes tables and figures to reports/
+and replaces the deployed model in backend/artifacts/ (copy that folder first).
 
 Design (3.2, 3.10): an 80/20 stratified split with a fixed seed; every algorithm is
 tuned by 5-fold stratified cross-validation on the training part only (macro F1 is
@@ -260,7 +260,7 @@ def save_app_model(sim_run, sim_df):
         "classes": config.CLASSES,
         "settings": {**{k: (v if v is None or isinstance(v, (int, float, str)) else str(v)) for k, v in params.items()},
                      "n_estimators": model.named_steps["clf"].n_estimators},
-        "test_metrics": {k: round(float(v), 4) for k, v in test_metrics.items()},
+        "test_metrics": {k: round(float(v), 6) for k, v in test_metrics.items()},
         "evaluation_note": ("Metrics come from the 80/20 held-out test split; the saved model was then refit on all "
                             "records."),
         "risk_rule": {"high_if_fail_probability_at_least": risk.HIGH_RISK_PROBABILITY,

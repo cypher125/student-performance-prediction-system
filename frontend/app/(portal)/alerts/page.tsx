@@ -64,7 +64,7 @@ function AlertCard({ alert, onChanged }: { alert: Alert; onChanged: () => void }
   }
 
   return (
-    <div className="rounded-xl border border-line bg-surface p-4">
+    <div data-alert-card className="rounded border border-line bg-surface p-4">
       <div className="flex flex-wrap items-center gap-3">
         <RiskBadge risk={alert.risk_level} />
         <Link href={`/students/view/?code=${alert.student.code}`} className="font-medium text-brand-dark hover:underline">{alert.student.full_name}</Link>
@@ -73,7 +73,7 @@ function AlertCard({ alert, onChanged }: { alert: Alert; onChanged: () => void }
       </div>
       <p className="mt-2 text-sm text-ink-2">{alert.message}</p>
       {alert.action_taken && !open && (
-        <p className="mt-2 rounded-lg bg-page p-2 text-sm"><strong>Intervention:</strong> {alert.action_taken}
+        <p className="mt-2 rounded border border-line-soft bg-panel p-2 text-sm"><strong>Intervention:</strong> {alert.action_taken}
           {alert.acknowledged_by && <span className="text-ink-2"> · {alert.acknowledged_by}, {date(alert.acknowledged_at)}</span>}</p>
       )}
       {alert.status !== "Resolved" && !open && (
@@ -86,7 +86,7 @@ function AlertCard({ alert, onChanged }: { alert: Alert; onChanged: () => void }
         <div className="mt-3 space-y-2">
           <textarea value={action} onChange={(e) => setAction(e.target.value)} rows={3} maxLength={2000}
             placeholder="What was done? e.g. Met the student on 23 Oct; agreed a weekly study plan; referred to the CA tutorial."
-            className="w-full rounded-lg border border-line p-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20" aria-label="Intervention taken" />
+            className="w-full rounded border border-line p-3 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/20" aria-label="Intervention taken" />
           {error && <ErrorNote message={error} />}
           <div className="flex flex-wrap gap-2">
             <Button busy={busy} onClick={() => update("Resolved")} disabled={!action.trim()}>Save and resolve</Button>

@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -41,12 +40,8 @@ function StudentView() {
 
   return (
     <>
-      {isStaff(user) && (
-        <Link href="/students/" className="no-print mb-3 inline-flex items-center gap-1 text-sm text-brand-dark hover:underline">
-          <ArrowLeft size={15} aria-hidden /> All students
-        </Link>
-      )}
       <PageHeader title={student.full_name}
+        crumbs={isStaff(user) ? [{ label: "Students", href: "/students/" }, { label: student.full_name }] : undefined}
         subtitle={`${student.code} · ${student.matric_number} · ${student.level} · ${student.department} · entered ${student.entry_session}`} />
 
       {latest ? <PredictionPanel prediction={latest} audience="staff" />

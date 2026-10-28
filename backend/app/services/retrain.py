@@ -1,8 +1,8 @@
 """Retrain the model on the records in the database (3.12.4: administrators retrain with new data).
 
 Uses the tuned settings saved with the current model, measures accuracy on a fresh
-80/20 split, refits on every record with results, archives the previous model file
-and swaps the new one in. Runs on a background thread; the status can be polled.
+80/20 split, refits on every record with results, archives the previous model file and
+its metadata, and swaps the new one in. Runs on a background thread; the status can be polled.
 """
 import json
 import shutil
@@ -84,6 +84,7 @@ def retrain(db):
 
     version = _next_version(old["version"])
     shutil.copy2(settings.model_path, settings.model_path.with_name(f"model_v{old['version']}.joblib"))
+    shutil.copy2(settings.model_meta_path, settings.model_meta_path.with_name(f"model_meta_v{old['version']}.json"))
     joblib.dump(model, settings.model_path, compress=3)
     prep, clf = model.named_steps["prep"], model.named_steps["clf"]
     importance = dict.fromkeys(features, 0.0)
@@ -94,7 +95,7 @@ def retrain(db):
         "version": version,
         "trained_on": date.today().isoformat(),
         "dataset": {"file": "database records with results", "records": len(data), "kind": "database"},
-        "test_metrics": {k: round(float(v), 4) for k, v in metrics.items()},
+        "test_metrics": {k: round(float(v), 6) for k, v in metrics.items()},
         "previous_version": old["version"],
         "feature_importance": [{"feature": f, "impurity": round(v, 4)} for f, v in
                                sorted(importance.items(), key=lambda kv: kv[1], reverse=True)],

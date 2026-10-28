@@ -249,6 +249,20 @@ def test_a_duplicate_email_is_a_clear_conflict(client):
     assert "email" in response.json()["detail"]
 
 
+def test_an_admin_resets_a_forgotten_password_but_cannot_disable_themselves(client):
+    admin = login(client, "admin")
+    created = client.post("/api/users", json={"username": "adviser5", "full_name": "Adviser Five",
+                                              "role": "adviser", "password": "Adviser@2026"}).json()
+    assert client.patch(f"/api/users/{created['id']}", json={"password": "short"}).status_code == 422
+    assert client.patch(f"/api/users/{created['id']}", json={"password": "Temporary@2026"}).status_code == 200
+    response = client.patch(f"/api/users/{admin['id']}", json={"is_active": False})
+    assert response.status_code == 400
+    assert "your own account" in response.json()["detail"]
+    client.cookies.clear()
+    assert client.post("/api/auth/login", json={"username": "adviser5", "password": "Adviser@2026"}).status_code == 401
+    assert client.post("/api/auth/login", json={"username": "adviser5", "password": "Temporary@2026"}).status_code == 200
+
+
 def _open_alerts_for(client, code):
     return [a for a in client.get("/api/alerts").json()["alerts"]
             if a["student"]["code"] == code and a["status"] != "Resolved"]
@@ -291,3 +305,35 @@ def test_previous_gpa_fills_from_an_earlier_row_in_the_same_file(client):
     records = {(r["session"], r["semester"]): r for r in client.get(f"/api/students/{code}").json()["records"]}
     assert records[("2024/2025", "Second")]["prior_gpa"] == 3.1
     assert records[("2025/2026", "First")]["prior_gpa"] == 2.4
+
+
+def test_students_never_see_the_staff_notes_or_next_step(client):
+    login(client, "admin")
+    assert client.post("/api/users", json={"username": "s0002", "full_name": "Tunde Bello", "role": "student",
+                                           "password": PASSWORD, "student_code": "S0002"}).status_code == 201
+    login(client, "lecturer")
+    settings = get_settings()
+    client.post("/api/records", json={
+        "student_code": "S0002", "level": "ND2", "session": settings.current_session,
+        "semester": settings.current_semester, "attendance_pct": 45, "ca_score": 30, "assignment_score": 25})
+    alert = next(a for a in client.get("/api/alerts").json()["alerts"]
+                 if a["student"]["code"] == "S0002" and a["status"] != "Resolved")
+    client.patch(f"/api/alerts/{alert['id']}", json={"status": "Acknowledged", "action_taken": "Private staff note."})
+    login(client, "s0002")
+    for alerts in (client.get("/api/alerts").json()["alerts"], client.get("/api/dashboard").json()["alerts"],
+                   client.get("/api/students/S0002").json()["alerts"]):
+        assert alerts
+        assert all(a["action_taken"] is None and a["acknowledged_by"] is None for a in alerts)
+    predictions = (client.get("/api/dashboard").json()["latest_prediction"],
+                   *client.get("/api/students/S0002").json()["predictions"])
+    assert all(r["audience"] == "student" for p in predictions for r in p["recommendations"])
+
+
+def test_the_summary_counts_this_semesters_staff_interventions(client):
+    login(client, "lecturer")
+    settings = get_settings()
+    alerts = client.get("/api/alerts").json()["alerts"]
+    written_by_staff = [a for a in alerts if a["session"] == settings.current_session
+                        and a["semester"] == settings.current_semester and a["action_taken"]
+                        and not a["action_taken"].startswith("Closed automatically")]
+    assert client.get("/api/reports/summary").json()["interventions_recorded"] == len(written_by_staff)

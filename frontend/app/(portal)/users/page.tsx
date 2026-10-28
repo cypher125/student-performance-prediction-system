@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Button, Card, ErrorNote, Field, Input, Loading, PageHeader, Select, SuccessNote, Table, Td } from "@/components/ui";
 import { api, ApiError, useApi } from "@/lib/api";
-import { date } from "@/lib/format";
+import { date, plural } from "@/lib/format";
 import type { Role, User } from "@/lib/types";
 
 const ROLES: Role[] = ["admin", "lecturer", "adviser", "student"];
@@ -11,10 +11,17 @@ const ROLES: Role[] = ["admin", "lecturer", "adviser", "student"];
 export default function UsersPage() {
   const { data, error, loading, reload } = useApi<{ count: number; users: User[] }>("/api/users");
   const [roleFilter, setRoleFilter] = useState("staff");
+  const [resetting, setResetting] = useState<number | null>(null);
+  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null);
   const users = (data?.users ?? []).filter((u) => roleFilter === "" || (roleFilter === "staff" ? u.role !== "student" : u.role === roleFilter));
 
   async function toggle(user: User) {
-    await api(`/api/users/${user.id}`, { method: "PATCH", json: { is_active: !user.is_active } }).catch(() => undefined);
+    setNote(null);
+    try {
+      await api(`/api/users/${user.id}`, { method: "PATCH", json: { is_active: !user.is_active } });
+    } catch (err) {
+      setNote({ ok: false, text: err instanceof ApiError ? err.message : "Could not change the account." });
+    }
     reload();
   }
 
@@ -28,22 +35,68 @@ export default function UsersPage() {
             <option value="staff">Staff accounts</option><option value="student">Student accounts</option><option value="">All accounts</option>
           </Select>
         </div>
-        <span className="text-sm text-ink-2">{users.length} accounts</span>
+        <span className="text-sm text-ink-2">{plural(users.length, "account")}</span>
       </div>
       {error && <ErrorNote message={error.message} />}
+      {note && <div className="mb-3">{note.ok ? <SuccessNote>{note.text}</SuccessNote> : <ErrorNote message={note.text} />}</div>}
       {loading && !data ? <Loading /> : (
         <Table head={["Username", "Name", "Role", "Student", "Last sign-in", "Status", ""]}>
           {users.map((u) => (
-            <tr key={u.id}>
-              <Td className="font-mono text-xs">{u.username}</Td><Td>{u.full_name}</Td><Td className="capitalize">{u.role}</Td>
-              <Td>{u.student_code ?? "–"}</Td><Td>{date(u.last_login)}</Td>
-              <Td>{u.is_active ? <span className="text-good-text">Active</span> : <span className="text-muted">Disabled</span>}</Td>
-              <Td><Button variant="ghost" onClick={() => toggle(u)}>{u.is_active ? "Disable" : "Enable"}</Button></Td>
-            </tr>
+            <Fragment key={u.id}>
+              <tr>
+                <Td className="font-mono text-xs">{u.username}</Td><Td>{u.full_name}</Td><Td className="capitalize">{u.role}</Td>
+                <Td>{u.student_code ?? "–"}</Td><Td>{date(u.last_login)}</Td>
+                <Td>{u.is_active ? <span className="text-ink">Active</span> : <span className="text-muted">Disabled</span>}</Td>
+                <Td>
+                  <Button variant="ghost" onClick={() => toggle(u)}>{u.is_active ? "Disable" : "Enable"}</Button>
+                  <Button variant="ghost" onClick={() => { setNote(null); setResetting(resetting === u.id ? null : u.id); }}>Reset password</Button>
+                </Td>
+              </tr>
+              {resetting === u.id && (
+                <tr><td colSpan={7} className="bg-panel px-3 py-3">
+                  <ResetPassword user={u} onDone={(text) => { setResetting(null); setNote({ ok: true, text }); }} onCancel={() => setResetting(null)} />
+                </td></tr>
+              )}
+            </Fragment>
           ))}
         </Table>
       )}
     </>
+  );
+}
+
+/** Sets a new temporary password for someone who has forgotten theirs. */
+function ResetPassword({ user, onDone, onCancel }: { user: User; onDone: (text: string) => void; onCancel: () => void }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    try {
+      await api(`/api/users/${user.id}`, { method: "PATCH", json: { password } });
+      onDone(`New temporary password set for ${user.username}. Give it to them and ask them to change it under My account.`);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Could not reset the password.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="flex flex-wrap items-end gap-3">
+      <div className="w-64">
+        <Field label={`New temporary password for ${user.username}`}>
+          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8}
+            placeholder="At least 8 characters" autoComplete="new-password" />
+        </Field>
+      </div>
+      <Button type="submit" busy={busy}>Save password</Button>
+      <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
+      {error && <div className="w-full"><ErrorNote message={error} /></div>}
+    </form>
   );
 }
 

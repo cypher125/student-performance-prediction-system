@@ -1,6 +1,5 @@
 "use client";
 
-import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { COLORS } from "@/components/charts";
@@ -55,7 +54,7 @@ export default function ModelPage() {
         <StatTile label="Accuracy" value={pct(m.accuracy)} note="Share of test students placed in the right class" />
         <StatTile label="Macro F1-score" value={num(m.f1_macro, 2)} note="Balances all four classes" />
         <StatTile label="ROC-AUC" value={num(m.roc_auc_ovr_macro, 2)} note="1.0 = perfect ranking, 0.5 = chance" />
-        <StatTile label="Failing students caught" value={pct(m.fail_recall)} tone="High" note="Recall of the Fail class" />
+        <StatTile label="Failing students caught" value={pct(m.fail_recall)} note="Recall of the Fail class" />
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-2">
@@ -65,12 +64,17 @@ export default function ModelPage() {
               <CartesianGrid horizontal={false} stroke={COLORS.grid} />
               <XAxis type="number" stroke={COLORS.grid} tick={{ fill: COLORS.ink2, fontSize: 12 }} tickLine={false} />
               <YAxis type="category" dataKey="label" width={150} stroke={COLORS.grid} tick={{ fill: COLORS.ink2, fontSize: 12 }} tickLine={false} />
-              <Tooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} formatter={(v) => Number(v).toFixed(3)} />
-              <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} itemSorter={null} />
-              <Bar isAnimationActive={false} dataKey="impurity" name="Impurity importance" fill="#2a78d6" maxBarSize={18} radius={[0, 4, 4, 0]}>
+              <Tooltip contentStyle={{ borderRadius: 4, fontSize: 12 }} formatter={(v) => Number(v).toFixed(3)} />
+              <Legend iconType="square" wrapperStyle={{ fontSize: 12 }} itemSorter={null}
+                formatter={(value: string) => <span style={{ color: COLORS.ink2 }}>{value}</span>} />
+              <Bar isAnimationActive={false} dataKey="impurity" name="Impurity importance" fill={COLORS.series} maxBarSize={18} radius={[0, 2, 2, 0]}>
                 <LabelList dataKey="impurity" position="right" fontSize={11} fill={COLORS.ink2} formatter={(v: unknown) => Number(v).toFixed(2)} />
               </Bar>
-              {hasShap && <Bar isAnimationActive={false} dataKey="shap" name="Mean |SHAP| (Fail)" fill="#eb6834" maxBarSize={18} radius={[0, 4, 4, 0]} />}
+              {hasShap && (
+                <Bar isAnimationActive={false} dataKey="shap" name="Mean |SHAP| (Fail)" fill="#9aa5b4" maxBarSize={18} radius={[0, 2, 2, 0]}>
+                  <LabelList dataKey="shap" position="right" fontSize={11} fill={COLORS.ink2} formatter={(v: unknown) => Number(v).toFixed(2)} />
+                </Bar>
+              )}
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -117,7 +121,7 @@ function Retrain({ initial, available, onDone }: { initial: RetrainState; availa
   return (
     <div className="flex max-w-sm flex-col items-end gap-2">
       <Button onClick={async () => setState(await api<RetrainState>("/api/model/retrain", { method: "POST" }))} busy={state.status === "running"}>
-        <RefreshCw size={16} aria-hidden /> Retrain on {available.toLocaleString()} records
+        Retrain on {available.toLocaleString()} records
       </Button>
       {state.status === "done" && <SuccessNote>{state.message}</SuccessNote>}
       {state.status === "failed" && <ErrorNote message={state.message} />}

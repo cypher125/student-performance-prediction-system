@@ -30,8 +30,6 @@ class Settings(BaseSettings):
     model_meta_path: Path = ARTIFACTS_DIR / "model_meta.json"
     current_session: str = "2025/2026"
     current_semester: str = "First"
-    # Local screenshot capture only: treats unauthenticated requests as this username.
-    demo_auto_login: str | None = None
 
     def signing_key(self) -> str:
         if self.secret_key:

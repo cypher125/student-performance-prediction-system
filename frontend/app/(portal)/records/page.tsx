@@ -1,10 +1,11 @@
 "use client";
 
-import { Download, FileUp, Play } from "lucide-react";
+import { Download } from "lucide-react";
 import { useRef, useState } from "react";
 import { PredictionPanel } from "@/components/prediction";
 import { Button, Card, ErrorNote, Field, Input, PageHeader, Select, SuccessNote, Table, Td } from "@/components/ui";
 import { api, API_BASE, ApiError } from "@/lib/api";
+import { plural } from "@/lib/format";
 import type { Prediction } from "@/lib/types";
 import { LEVELS } from "@/lib/types";
 
@@ -61,7 +62,7 @@ function UploadCard() {
       actions={<a href={`${API_BASE}/api/records/template`} className="inline-flex items-center gap-1.5 text-sm text-brand-dark hover:underline"><Download size={15} aria-hidden /> Template</a>}>
       <div className="flex flex-wrap items-center gap-3">
         <input ref={input} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { setFile(e.target.files?.[0] ?? null); setResult(null); }} />
-        <Button variant="secondary" onClick={() => input.current?.click()}><FileUp size={16} aria-hidden /> Choose file</Button>
+        <Button variant="secondary" onClick={() => input.current?.click()}>Choose file</Button>
         <span className="text-sm text-ink-2">{file ? file.name : "No file chosen"}</span>
         <Button onClick={upload} disabled={!file} busy={busy} className="ml-auto">Upload and predict</Button>
       </div>
@@ -73,11 +74,13 @@ function UploadCard() {
           <>
             <SuccessNote>
               {result.rows_accepted} of {result.rows_received} rows saved ({result.records_created} new, {result.records_updated} updated).{" "}
-              {result.predictions_made} predictions made and {result.alerts_raised} alerts raised.
+              {plural(result.predictions_made, "prediction")} made and {plural(result.alerts_raised, "alert")} raised.
             </SuccessNote>
             {result.errors.length > 0 && (
               <>
-                <p className="text-sm font-medium text-critical">{result.rows_rejected} rows were not saved. Fix them and upload again:</p>
+                <p className="text-sm font-medium text-critical">
+                  {result.rows_rejected === 1 ? "1 row was not saved. Fix it" : `${result.rows_rejected} rows were not saved. Fix them`} and upload again:
+                </p>
                 <Table head={["Row", "Field", "Problem"]}>
                   {result.errors.map((e) => <tr key={`${e.row}-${e.field}`}><Td>{e.row}</Td><Td className="font-mono text-xs">{e.field}</Td><Td wrap>{e.message}</Td></tr>)}
                 </Table>
@@ -147,7 +150,7 @@ function RunPredictions() {
     setBusy(true);
     try {
       const r = await api<{ predictions_made: number; alerts_raised: number; records_checked: number; model_version: string }>("/api/predictions/run", { method: "POST" });
-      setMessage(r.predictions_made ? `${r.predictions_made} records scored with model ${r.model_version}; ${r.alerts_raised} alerts raised.`
+      setMessage(r.predictions_made ? `${plural(r.predictions_made, "record")} scored with model ${r.model_version}; ${plural(r.alerts_raised, "alert")} raised.`
         : `All ${r.records_checked} current records are already scored by model ${r.model_version}.`);
     } catch (err) {
       setMessage(err instanceof ApiError ? err.message : "Could not run predictions.");
@@ -157,7 +160,7 @@ function RunPredictions() {
   }
   return (
     <div className="flex flex-col items-end gap-1">
-      <Button variant="secondary" onClick={run} busy={busy}><Play size={16} aria-hidden /> Score current semester</Button>
+      <Button variant="secondary" onClick={run} busy={busy}>Score current semester</Button>
       {message && <span className="max-w-xs text-right text-xs text-ink-2">{message}</span>}
     </div>
   );

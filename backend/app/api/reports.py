@@ -5,7 +5,7 @@ from collections import Counter
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response
 from sqlalchemy import select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
 from ml import config as ml_config
 from ml import risk
@@ -14,6 +14,7 @@ from .. import models as m
 from ..db import get_db
 from ..queries import latest_predictions
 from ..security import require_staff
+from ..services.predictor import AUTO_CLOSE_NOTE
 from ..settings import get_settings
 
 router = APIRouter(prefix="/api/reports", tags=["Reports"])
@@ -29,14 +30,19 @@ def summary(_user: m.User = Depends(require_staff), db: Session = Depends(get_db
         counts = Counter(p.risk_level for p in group)
         table.append({"level": level, "students": len(group), **{r: counts.get(r, 0) for r in risk.LEVELS},
                       "at_risk_pct": round(100 * (counts["High"] + counts["Medium"]) / len(group), 1) if group else 0})
-    alerts = db.scalars(select(m.Alert).options(selectinload(m.Alert.prediction))).all()
+    # This semester's alerts only; an intervention is a note written by staff, not the automatic closing note.
+    alerts = db.scalars(select(m.Alert).join(m.Prediction, m.Alert.prediction_id == m.Prediction.id)
+                        .join(m.AcademicRecord, m.Prediction.record_id == m.AcademicRecord.id)
+                        .where(m.AcademicRecord.session == settings.current_session,
+                               m.AcademicRecord.semester == settings.current_semester)).all()
     return {
         "session": settings.current_session, "semester": settings.current_semester,
         "students_assessed": len(predictions),
         "by_level": table,
         "predicted_classes": dict(Counter(p.predicted_class for p in predictions)),
         "alerts": {s: sum(a.status == s for a in alerts) for s in m.ALERT_STATUSES},
-        "interventions_recorded": sum(bool(a.action_taken) for a in alerts),
+        "interventions_recorded": sum(bool(a.action_taken) and not a.action_taken.startswith(AUTO_CLOSE_NOTE)
+                                      for a in alerts),
     }
 
 

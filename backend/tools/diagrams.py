@@ -11,8 +11,8 @@ from matplotlib.patches import Circle, Ellipse, FancyArrowPatch, FancyBboxPatch,
 
 from ml import plotstyle as ps  # noqa: E402
 
-INK, INK2, LINE = ps.INK, ps.INK_SECONDARY, "#9a998f"
-TINTS = {"blue": ("#eef4fc", "#2a78d6"), "orange": ("#fdf1ea", "#eb6834"), "green": ("#e9f6f0", "#1baf7a"),
+INK, INK2, LINE = ps.INK, ps.INK_SECONDARY, "#9aa29b"
+TINTS = {"college": ("#e8f1eb", "#0b4f2c"), "gold": ("#fbf3d1", "#b88a00"), "slate": ("#eef1f5", "#475569"),
          "grey": ("#f3f2ee", "#898781")}
 
 
@@ -49,14 +49,14 @@ def save(fig, name):
 def architecture():
     fig, ax = canvas(12, 9.4)
     tiers = [
-        (66, "Presentation Layer: Next.js web interface (React, TypeScript, Tailwind CSS, Recharts)", "blue",
+        (66, "Presentation Layer: Next.js web interface (React, TypeScript, Tailwind CSS, Recharts)", "college",
          ["Sign-in", "Dashboards", "Students &\nprofiles", "Records &\nCSV upload", "Alerts &\ninterventions",
           "Reports", "Model &\nretraining", "User\naccounts"]),
-        (34, "Application Layer: FastAPI REST API (Python)", "orange",
+        (34, "Application Layer: FastAPI REST API (Python)", "gold",
          ["Authentication\n& role checks", "Validation &\nCSV import", "Preprocessing\npipeline",
           "Random Forest\nmodel", "SHAP\nexplainer", "Recommendation\nengine", "Alert\nengine",
           "Reports &\nretraining"]),
-        (4, "Database Layer: SQLite through SQLAlchemy (PostgreSQL-ready)", "green",
+        (4, "Database Layer: SQLite through SQLAlchemy (PostgreSQL-ready)", "slate",
          ["Student", "Academic\nRecord", "Prediction", "Alert", "User"]),
     ]
     for y, title, tint, parts in tiers:
@@ -68,7 +68,7 @@ def architecture():
         for i, part in enumerate(parts):
             box(ax, 7 + i * (width + 2), y + 3, width, 12, part, size=7.0 if n > 6 else 8.6)
     for x, label in ((30, "Administrator"), (60, "Lecturer / Adviser"), (90, "Student")):
-        box(ax, x - 10, 95, 20, 5.5, label, fill="white", edge=TINTS["blue"][1], size=9)
+        box(ax, x - 10, 95, 20, 5.5, label, fill="white", edge=TINTS["college"][1], size=9)
         arrow(ax, (x, 95), (x, 90))
     ax.text(60, 103, "Users sign in with a web browser", ha="center", fontsize=9, color=INK2)
     arrow(ax, (60, 66), (60, 58), "HTTPS requests and JSON responses (session cookie)", both=True)
@@ -111,7 +111,7 @@ def use_cases():
         "users": (60, 7, "Manage user accounts"),
     }
     for x, y, label in cases.values():
-        ax.add_patch(Ellipse((x, y), 50, 6.2, facecolor="white", edgecolor=TINTS["blue"][1], lw=1.2, zorder=2))
+        ax.add_patch(Ellipse((x, y), 50, 6.2, facecolor="white", edgecolor=TINTS["college"][1], lw=1.2, zorder=2))
         ax.text(x, y, label, ha="center", va="center", fontsize=8.8, zorder=3)
     actors = {"lecturer": (12, 62, "Lecturer /\nAdviser"), "admin": (108, 30, "Administrator"),
               "student": (12, 18, "Student")}
@@ -153,14 +153,14 @@ def flowchart():
     for kind, y, text in steps:
         if kind == "dec":
             ax.add_patch(Polygon([(cx, y + 6.5), (cx + 15, y), (cx, y - 6.5), (cx - 15, y)], closed=True,
-                                 facecolor=TINTS["orange"][0], edgecolor=TINTS["orange"][1], lw=1.2, zorder=2))
+                                 facecolor=TINTS["gold"][0], edgecolor=TINTS["gold"][1], lw=1.2, zorder=2))
             ax.text(cx, y, text, ha="center", va="center", fontsize=8.6, zorder=3)
         elif kind == "start":
-            box(ax, cx - 10, y - 3.5, 20, 7, text, fill=TINTS["green"][0], edge=TINTS["green"][1], radius=3.4, size=9,
+            box(ax, cx - 10, y - 3.5, 20, 7, text, fill=TINTS["college"][0], edge=TINTS["college"][1], radius=3.4, size=9,
                 weight="semibold")
         elif kind == "io":
             ax.add_patch(Polygon([(cx - 19, y - 4.5), (cx + 22, y - 4.5), (cx + 19, y + 4.5), (cx - 22, y + 4.5)],
-                                 closed=True, facecolor=TINTS["blue"][0], edgecolor=TINTS["blue"][1], lw=1.2, zorder=2))
+                                 closed=True, facecolor=TINTS["college"][0], edgecolor=TINTS["college"][1], lw=1.2, zorder=2))
             ax.text(cx, y, text, ha="center", va="center", fontsize=8.6, zorder=3)
         else:
             box(ax, cx - 19, y - 4.5, 38, 9, text, fill="white", edge=LINE, size=8.6)
@@ -187,16 +187,16 @@ ROW = 3.8
 
 def entity(ax, x, y, name, rows, width=24):
     h = ROW * (len(rows) + 1)
-    box(ax, x, y - h, width, h, fill="white", edge=TINTS["blue"][1], radius=0.8, lw=1.2)
+    box(ax, x, y - h, width, h, fill="white", edge=TINTS["college"][1], radius=0.8, lw=1.2)
     ax.add_patch(FancyBboxPatch((x, y - ROW), width, ROW, boxstyle="round,pad=0,rounding_size=0.8",
-                                facecolor=TINTS["blue"][1], edgecolor=TINTS["blue"][1], zorder=3))
+                                facecolor=TINTS["college"][1], edgecolor=TINTS["college"][1], zorder=3))
     ax.text(x + width / 2, y - ROW / 2, name, ha="center", va="center", color="white", fontsize=9.5,
             fontweight="semibold", zorder=4)
     for i, (field, key) in enumerate(rows):
         yy = y - ROW * (i + 1.5)
         tag = {"pk": "PK ", "fk": "FK ", "": ""}[key]
         ax.text(x + 1.2, yy, f"{tag}{field}", va="center", fontsize=7.8, zorder=4,
-                color=TINTS["blue"][1] if key == "fk" else INK, fontweight="semibold" if key == "pk" else "normal")
+                color=TINTS["college"][1] if key == "fk" else INK, fontweight="semibold" if key == "pk" else "normal")
     return (x, y, width, h)
 
 
@@ -222,7 +222,7 @@ def erd():
 
     def link(p1, p2, l1, l2, label="", label_x=None):
         ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color=INK2, lw=1.1, zorder=1)
-        style = {"color": ps.TOWARD, "fontsize": 9, "fontweight": "bold"}
+        style = {"color": "#0b4f2c", "fontsize": 9, "fontweight": "bold"}
         if p1[0] == p2[0]:  # vertical: cardinalities beside the line, just outside each box
             ax.text(p1[0] + 1.2, p1[1] - 3.2, l1, **style)
             ax.text(p2[0] + 1.2, p2[1] + 1.0, l2, **style)

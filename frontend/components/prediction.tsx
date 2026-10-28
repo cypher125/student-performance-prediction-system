@@ -1,6 +1,5 @@
 "use client";
 
-import { Lightbulb, UserCheck } from "lucide-react";
 import { ExplanationChart, ProbabilityBars } from "@/components/charts";
 import { Card, ClassBadge, RiskBadge } from "@/components/ui";
 import { date, pct } from "@/lib/format";
@@ -42,13 +41,9 @@ export function PredictionPanel({ prediction, audience }: { prediction: Predicti
       <Card title="Recommendations" className="lg:col-span-5">
         <ul className="grid gap-3 md:grid-cols-2">
           {advice.map((r, i) => (
-            <li key={i} className={`flex gap-3 rounded-lg border p-3 text-sm ${r.audience === "staff" ? "border-brand/30 bg-brand-soft" : "border-line bg-page"}`}>
-              {r.audience === "staff" ? <UserCheck size={18} className="mt-0.5 shrink-0 text-brand-dark" aria-hidden />
-                : <Lightbulb size={18} className="mt-0.5 shrink-0 text-warn-text" aria-hidden />}
-              <div>
-                <p className="font-medium">{r.audience === "staff" ? "For the adviser" : r.factor}</p>
-                <p className="mt-0.5 text-ink-2">{r.text}</p>
-              </div>
+            <li key={i} className={`rounded border border-line border-l-4 px-3 py-2.5 text-sm ${r.audience === "staff" ? "border-l-gold bg-gold-soft/50" : "border-l-brand bg-surface"}`}>
+              <p className="font-semibold">{r.audience === "staff" ? "For the adviser" : r.factor}</p>
+              <p className="mt-0.5 text-ink-2">{r.text}</p>
             </li>
           ))}
         </ul>

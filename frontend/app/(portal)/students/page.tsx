@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, UserPlus } from "lucide-react";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button, Card, ClassBadge, ErrorNote, Field, Input, Loading, PageHeader, RiskBadge, Select, StatusBadge, SuccessNote, Table, Td } from "@/components/ui";
@@ -36,7 +36,7 @@ export default function StudentsPage() {
   return (
     <>
       <PageHeader title="Students" subtitle="Current-semester predictions, highest risk first"
-        actions={<Button variant="secondary" onClick={() => setAdding((v) => !v)}><UserPlus size={16} aria-hidden /> Register student</Button>} />
+        actions={<Button variant="secondary" onClick={() => setAdding((v) => !v)}>Register student</Button>} />
 
       {adding && <AddStudent onDone={() => { setAdding(false); reload(); }} />}
 

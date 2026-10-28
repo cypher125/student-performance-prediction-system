@@ -1,3 +1,6 @@
+/** "1 alert", "2 alerts". */
+export const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 export const pct = (p: number | null | undefined) => (p == null ? "–" : `${Math.round(p * 100)}%`);
 
 export const num = (v: number | null | undefined, digits = 1) => (v == null ? "–" : v.toFixed(digits));

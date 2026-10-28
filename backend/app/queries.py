@@ -39,7 +39,8 @@ def record_json(record: m.AcademicRecord):
     }
 
 
-def prediction_json(prediction: m.Prediction, full=True):
+def prediction_json(prediction: m.Prediction, full=True, for_student=False):
+    """One prediction. A student gets their own advice but not the staff's next step."""
     out = {
         "id": prediction.id, "record_id": prediction.record_id, "predicted_class": prediction.predicted_class,
         "confidence_score": prediction.confidence_score, "fail_probability": prediction.fail_probability,
@@ -47,23 +48,26 @@ def prediction_json(prediction: m.Prediction, full=True):
         "created_at": iso(prediction.created_at),
     }
     if full:
+        advice = [r for r in prediction.recommendations if not (for_student and r["audience"] == "staff")]
         out.update(probabilities=prediction.probabilities, explanation=prediction.explanation,
-                   recommendations=prediction.recommendations)
+                   recommendations=advice)
     else:
         top = next((e for e in prediction.explanation if e["contribution"] > 0), None)
         out["top_factor"] = top["label"] if top else None
     return out
 
 
-def alert_json(alert: m.Alert):
+def alert_json(alert: m.Alert, for_student=False):
+    """One alert. A student sees their own alerts without the staff's notes and names."""
     prediction = alert.prediction
     student = prediction.student
     record = prediction.record
     return {
         "id": alert.id, "alert_type": alert.alert_type, "message": alert.message, "status": alert.status,
         "sent_at": iso(alert.sent_at), "acknowledged_at": iso(alert.acknowledged_at),
-        "acknowledged_by": alert.acknowledged_by_user.full_name if alert.acknowledged_by_user else None,
-        "action_taken": alert.action_taken,
+        "acknowledged_by": None if for_student or not alert.acknowledged_by_user
+        else alert.acknowledged_by_user.full_name,
+        "action_taken": None if for_student else alert.action_taken,
         "student": {"code": student.student_code, "full_name": student.full_name, "level": record.level},
         "risk_level": prediction.risk_level, "fail_probability": prediction.fail_probability,
         "session": record.session, "semester": record.semester,

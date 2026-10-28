@@ -62,8 +62,8 @@ def get_student(code: str, user: m.User = Depends(current_user), db: Session = D
     return {
         "student": student_json(student),
         "records": [record_json(r) for r in records_chronological(student)],
-        "predictions": [prediction_json(p) for p in predictions],
-        "alerts": [alert_json(p.alert) for p in predictions if p.alert],
+        "predictions": [prediction_json(p, for_student=user.role == "student") for p in predictions],
+        "alerts": [alert_json(p.alert, for_student=user.role == "student") for p in predictions if p.alert],
     }
 
 

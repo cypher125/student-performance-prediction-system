@@ -9,7 +9,6 @@ from datetime import datetime, timedelta, timezone
 import jwt
 from fastapi import Depends, HTTPException, Request, Response, status
 from pwdlib import PasswordHash
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .db import get_db
@@ -63,8 +62,6 @@ def current_user(request: Request, db: Session = Depends(get_db)) -> User:
             user = db.get(User, int(payload["sub"]))
         except (jwt.PyJWTError, KeyError, ValueError):
             user = None
-    elif settings.demo_auto_login:
-        user = db.scalar(select(User).where(User.username == settings.demo_auto_login))
     if user is None or not user.is_active:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Please sign in.")
     return user

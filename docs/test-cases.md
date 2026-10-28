@@ -43,6 +43,9 @@ For Chapter 4, Section 4.11 (Section 3.18 promised unit, integration, system, pe
 | ST26 | Re-scoring an at-risk student | Same record scored twice, then improved to low risk | One open alert, not two; it closes automatically, with a note, when the risk drops | `test_rescoring_keeps_one_alert_and_closes_it_when_risk_drops` |
 | ST27 | Editing a finished semester | New CA and attendance for a semester whose GPA is already released | Results kept (GPA 2.75); the record is not scored again | `test_updating_a_finished_semester_keeps_its_results` |
 | ST28 | Several semesters in one upload, previous GPA blank | Three consecutive semesters for one student | Each previous GPA is filled from the row before it (3.1, then 2.4) | `test_previous_gpa_fills_from_an_earlier_row_in_the_same_file` |
+| ST29 | Reset a forgotten password; disable yourself | Admin sets a new temporary password (first too short), then tries to disable their own account | Short password refused (422); new password works and the old one fails; self-disable refused (400) | `test_an_admin_resets_a_forgotten_password_but_cannot_disable_themselves` |
+| ST30 | A student opens their own alerts | Staff note on a student's alert; the student signs in | The student sees the alert and their own advice, but not the staff note, who acknowledged it, or the staff's next step | `test_students_never_see_the_staff_notes_or_next_step` |
+| ST31 | Interventions in the summary report | Alerts with staff notes, and one closed automatically | Counts only this semester's alerts with a note written by staff | `test_the_summary_counts_this_semesters_staff_interventions` |
 
 ## Performance testing
 
@@ -54,7 +57,7 @@ See `docs/uat-questionnaire.md`. Report only the responses actually collected.
 
 ## Results of the latest run
 
-Run on 23 October 2026 (Windows 11, Python 3.13.1) with `.venv\Scripts\python.exe -m pytest` from the `backend` folder:
+Run on 28 October 2026 (Windows 11, Python 3.13.1) with `.venv\Scripts\python.exe -m pytest` from the `backend` folder:
 
 | Test file | Tests | Passed | Failed |
 |---|---|---|---|
@@ -62,7 +65,7 @@ Run on 23 October 2026 (Windows 11, Python 3.13.1) with `.venv\Scripts\python.ex
 | `test_simulate.py` | 11 | 11 | 0 |
 | `test_cleaning.py` | 21 | 21 | 0 |
 | `test_uci.py` | 4 | 4 | 0 |
-| `test_api.py` (system tests ST01–ST28) | 23 | 23 | 0 |
-| **Total** | **94** | **94** | **0** |
+| `test_api.py` (system tests ST01–ST31) | 26 | 26 | 0 |
+| **Total** | **97** | **97** | **0** |
 
 The whole suite ran in 87 seconds. Every system test case in Table 4.18 passed. ST21–ST28 were added after two code reviews found eight defects, each now fixed and covered by its test. This is worth mentioning in Chapter 4 as evidence that the testing found and removed real faults.

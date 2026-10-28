@@ -27,7 +27,7 @@ export default function ReportsPage() {
       <PageHeader title="Summary report" subtitle={`${data.semester} semester, ${data.session} · generated ${new Date().toLocaleDateString("en-GB")}`}
         actions={<>
           <a href={`${API_BASE}/api/reports/predictions.csv`}
-            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3.5 py-2 text-sm font-medium hover:bg-page">
+            className="inline-flex items-center gap-2 rounded border border-line bg-surface px-3.5 py-2 text-sm font-semibold hover:bg-page">
             <Download size={16} aria-hidden /> Export predictions (CSV)
           </a>
           <Button onClick={() => window.print()}><Printer size={16} aria-hidden /> Print</Button>
@@ -37,8 +37,8 @@ export default function ReportsPage() {
         <StatTile label="Students assessed" value={data.students_assessed} />
         <StatTile label="At risk (High + Medium)" value={total.High + total.Medium} tone="High"
           note={`${Math.round((100 * (total.High + total.Medium)) / Math.max(1, data.students_assessed))}% of students`} />
-        <StatTile label="Alerts still open" value={(data.alerts.New ?? 0) + (data.alerts.Acknowledged ?? 0)} tone="Medium" />
-        <StatTile label="Interventions recorded" value={data.interventions_recorded} tone="Low" />
+        <StatTile label="Alerts still open" value={(data.alerts.New ?? 0) + (data.alerts.Acknowledged ?? 0)} />
+        <StatTile label="Interventions recorded" value={data.interventions_recorded} />
       </div>
 
       <div className="mt-5 grid gap-5 lg:grid-cols-3">

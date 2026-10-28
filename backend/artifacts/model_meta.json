@@ -39,7 +39,7 @@
     "accuracy": 0.6041,
     "precision_macro": 0.5653,
     "recall_macro": 0.6035,
-    "f1_macro": 0.5785,
+    "f1_macro": 0.578457,
     "precision_weighted": 0.6143,
     "recall_weighted": 0.6041,
     "f1_weighted": 0.6038,

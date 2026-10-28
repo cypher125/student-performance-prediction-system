@@ -103,13 +103,28 @@ def seed():
         print(f"  student   username = student code in lower case, e.g. {example}; password {STUDENT_PASSWORD}")
 
 
+def seed_admin_only():
+    """An empty database with one administrator account, for starting on real records."""
+    username, full_name, role, password = STAFF[0]
+    with SessionLocal() as db:
+        if db.scalar(select(func.count()).select_from(m.User)):
+            sys.exit("The database already has accounts. Add --reset to start again.")
+        db.add(m.User(username=username, full_name=full_name, role=role, password_hash=hash_password(password)))
+        db.commit()
+    print(f"Empty database created with one account: username {username}, password {password}.")
+    print("Sign in and change this password straight away.")
+
+
 def main():
     url = get_settings().database_url
     if "--reset" in sys.argv and url.startswith("sqlite:///"):
         engine.dispose()
         Path(url.removeprefix("sqlite:///")).unlink(missing_ok=True)
     create_tables()
-    seed()
+    if "--empty" in sys.argv:
+        seed_admin_only()
+    else:
+        seed()
 
 
 if __name__ == "__main__":

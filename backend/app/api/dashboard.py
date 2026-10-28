@@ -72,10 +72,10 @@ def student_dashboard(db: Session, user: m.User):
     return {
         "role": "student",
         "student": student_json(student),
-        "latest_prediction": prediction_json(predictions[0]) if predictions else None,
+        "latest_prediction": prediction_json(predictions[0], for_student=True) if predictions else None,
         "current_record": record_json(records[-1]) if records else None,
         "history": [record_json(r) for r in records if r.gpa is not None],
-        "alerts": [alert_json(a) for a in alerts],
+        "alerts": [alert_json(a, for_student=True) for a in alerts],
     }
 
 

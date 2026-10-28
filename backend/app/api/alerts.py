@@ -25,7 +25,7 @@ def list_alerts(alert_status: str | None = None, risk: str | None = None,
     if user.role == "student":
         query = query.join(m.Prediction).where(m.Prediction.student_id == user.student_id)
     alerts = db.scalars(query).all()
-    rows = [alert_json(a) for a in alerts
+    rows = [alert_json(a, for_student=user.role == "student") for a in alerts
             if (alert_status is None or a.status == alert_status)
             and (risk is None or a.prediction.risk_level == risk)]
     return {"count": len(rows), "alerts": rows}

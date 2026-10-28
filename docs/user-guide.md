@@ -5,7 +5,7 @@ How to install, start and use the Student Performance Prediction System. This gu
 ## 1. Requirements
 
 - Windows 10 or 11, a 2 GHz processor and 4 GB RAM or more.
-- **Python 3.11 or later** from python.org. During installation, tick "Add Python to PATH".
+- **Python 3.12 or later** from python.org. During installation, tick "Add Python to PATH".
 - A web browser: Chrome, Edge or Firefox.
 - An internet connection **only for the first setup**, to download the Python packages. After that the system runs fully offline.
 - Node.js is not needed: the web interface comes prebuilt in `frontend/out`.
@@ -20,6 +20,7 @@ How to install, start and use the Student Performance Prediction System. This gu
 - Double-click **`start.bat`**. A black window opens; leave it open. After about 15 seconds the browser opens at **http://localhost:8000**.
 - To stop the system, close the black window.
 - To reset all demo data (users, alerts, interventions), run this from the `backend` folder: `.venv\Scripts\python.exe -m app.seed --reset`.
+- To start afresh with real records instead, run `.venv\Scripts\python.exe -m app.seed --reset --empty`. It creates an empty database with one account, `admin` / `Admin@2026`; sign in and change that password straight away. Both commands delete the existing database, so copy `backend\datapp.db` somewhere safe first.
 
 ## 4. Demo accounts
 
@@ -40,9 +41,9 @@ Every student in the current semester (2025/2026, first semester) has an account
 |---|---|
 | **Dashboard** | Numbers of High, Medium and Low risk students; risk by level; predicted classes; the main reasons students are at risk; the latest alerts. |
 | **Students** | Every current student, highest risk first, with their attendance, CA, assignments, previous GPA, predicted class, probability of Fail and risk. Use the search box and filters. Click a name to open the profile. **Register student** adds a new student. |
-| **Student profile** | The predicted class and the probability of each class; "Why this prediction?" (red bars raise the risk of failing, blue bars lower it); recommendations for the student and the next step for the adviser; GPA trend; every semester record; alerts and interventions. |
+| **Student profile** | The predicted class and the probability of each class; "Why this prediction?" (red bars raise the risk of failing, grey bars lower it); recommendations for the student and the next step for the adviser; GPA trend; every semester record; alerts and interventions. |
 | **Records & upload** | **Upload a CSV** of the semester's records (download the template first), or **enter one record** by hand. Records without results are scored straight away, and High or Medium risk raises an alert. **Score current semester** re-scores every current record after the model has been retrained. |
-| **Alerts** | Alerts for High and Medium risk students. **Record intervention** describes what was done (for example, "Met the student; agreed a weekly study plan"), then **Save and resolve**. The log appears on the student's profile and in the reports. |
+| **Alerts** | Alerts for High and Medium risk students. **Record intervention** describes what was done (for example, "Met the student; agreed a weekly study plan"), then **Save and resolve**. The note appears on the alert and on the student's profile for staff (students do not see it), and the reports count the interventions. |
 | **Reports** | A summary by level and alert status. **Export predictions (CSV)** opens in Excel; **Print** gives a paper copy. |
 | **Model** | The model's test accuracy, the share of failing students it catches, which factors matter most, and how a prediction becomes an alert. |
 
@@ -70,7 +71,7 @@ Sign in with your student code. The **Dashboard** shows your predicted class, yo
 
 ## 7. Using the system: administrators
 
-- **Users:** create accounts (a student account needs the student's code), and disable or enable accounts.
+- **Users:** create accounts (a student account needs the student's code), disable or enable accounts, and **Reset password** for someone who has forgotten theirs (give them the new temporary password and ask them to change it under **My account**).
 - **Model → Retrain:** retrains the model on every record with released results. It runs in the background for about a minute; when it finishes, the new version and its accuracy are shown. Then use **Score current semester** on the Records page.
 
 ## 8. Troubleshooting
@@ -91,7 +92,7 @@ Run these from the `backend` folder with `.venv\Scripts\python.exe`.
 | Rebuild the datasets, tables and data figures | `-m ml.prepare_data` |
 | Retrain and evaluate every model (about 40 minutes) | `-m ml.train_models` |
 | Redraw the Chapter 3 diagrams | `-m tools.diagrams` |
-| Take the Chapter 4 screenshots (server must be running) | `-m tools.screenshots` |
+| Retake every screenshot (Chapter 4 and the PDFs) | from the project folder: `python backend/tools/screenshots.py` (needs Playwright and Microsoft Edge; it starts its own server and rebuilds the demo database) |
 | Run all automated tests | `-m pytest` |
 | Start the API with auto-reload | `-m uvicorn app.main:app --reload` |
 

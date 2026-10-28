@@ -18,6 +18,8 @@ from .. import models as m
 from ..settings import get_settings
 from .recommendations import recommend
 
+AUTO_CLOSE_NOTE = "Closed automatically:"  # starts the note on an alert the system closed itself
+
 _lock = threading.Lock()
 _predictor = None
 
@@ -140,7 +142,7 @@ def save_predictions(db, records, predictor=None):
                 prediction.alert = m.Alert(alert_type=alert_type, message=message)
                 alerts += 1
         elif existing:
-            note = f"Closed automatically: model {predictor.version} now rates the student low risk."
+            note = f"{AUTO_CLOSE_NOTE} model {predictor.version} now rates the student low risk."
             existing.status = "Resolved"
             existing.action_taken = f"{existing.action_taken} {note}" if existing.action_taken else note
         created.append(prediction)

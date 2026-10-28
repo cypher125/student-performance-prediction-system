@@ -1,6 +1,5 @@
 "use client";
 
-import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { CountBars, GpaHistoryChart, RiskByLevelChart } from "@/components/charts";
 import { PredictionPanel } from "@/components/prediction";
@@ -73,13 +72,13 @@ function StaffView() {
         <Card title="This semester so far" subtitle="Averages across the students assessed">
           <dl className="grid grid-cols-3 gap-3 text-center">
             {[["Attendance", data.averages.attendance_pct], ["CA score", data.averages.ca_score], ["Assignments", data.averages.assignment_score]].map(([label, v]) => (
-              <div key={label as string} className="rounded-lg bg-page p-3">
+              <div key={label as string} className="rounded border border-line-soft bg-panel p-3">
                 <dt className="text-xs text-ink-2">{label}</dt>
                 <dd className="mt-1 text-2xl font-semibold">{num(v as number | null, 1)}%</dd>
               </div>
             ))}
           </dl>
-          <div className="mt-4 rounded-lg border border-line p-3 text-sm text-ink-2">
+          <div className="mt-4 rounded border border-line bg-panel p-3 text-sm text-ink-2">
             Model {data.model.version} (trained {data.model.trained_on}): test accuracy <strong>{pct(data.model.accuracy)}</strong>,
             macro F1 <strong>{num(data.model.f1_macro, 2)}</strong>, catches <strong>{pct(data.model.fail_recall)}</strong> of failing students.{" "}
             <Link href="/model/" className="text-brand-dark underline">Details</Link>
@@ -117,8 +116,7 @@ function StudentView() {
         subtitle={`${data.student.code} · ${data.student.matric_number} · ${data.student.level}, ${data.student.session}`} />
 
       {openAlert && (
-        <div className="mb-5 flex gap-3 rounded-xl border border-critical/30 bg-critical/5 p-4 text-sm">
-          <AlertTriangle className="shrink-0 text-critical" size={20} aria-hidden />
+        <div className="mb-5 rounded border border-critical/30 border-l-4 border-l-critical bg-critical/5 p-4 text-sm">
           <div>
             <p className="font-medium">You have been flagged for early support ({openAlert.risk_level.toLowerCase()} risk).</p>
             <p className="mt-0.5 text-ink-2">Your academic adviser has been notified. Follow the recommendations below and expect a check-in.</p>
@@ -135,7 +133,7 @@ function StudentView() {
             <dl className="grid grid-cols-2 gap-3 text-sm">
               {[["Attendance", `${num(data.current_record.attendance_pct)}%`], ["CA score", `${num(data.current_record.ca_score)}%`],
                 ["Assignments", `${num(data.current_record.assignment_score)}%`], ["Previous GPA", num(data.current_record.prior_gpa, 2)]].map(([k, v]) => (
-                <div key={k} className="rounded-lg bg-page p-3"><dt className="text-xs text-ink-2">{k}</dt><dd className="mt-1 text-xl font-semibold">{v}</dd></div>
+                <div key={k} className="rounded border border-line-soft bg-panel p-3"><dt className="text-xs text-ink-2">{k}</dt><dd className="mt-1 text-xl font-semibold">{v}</dd></div>
               ))}
             </dl>
           </Card>
