@@ -14,7 +14,7 @@ The demonstration accounts are the ones printed on the sign-in page (`admin`, `l
 
 ## How it runs
 
-- **One container** (`max_containers=1`), so there is only ever one database. It starts when the first request arrives and stops after 20 minutes without requests, so it costs nothing while idle. The first request after a stop waits about 25 seconds while the container starts and loads the model.
+- **One container** (`max_containers=1`), so there is only ever one database. It starts when the first request arrives and stops after 20 minutes without requests, so it costs nothing while idle. The first request after a stop waits about 10 seconds while the container starts, restores the database and loads the model (the very first start, which also creates the demonstration data, took about 25).
 - **The database** is SQLite on the container's own disk. It is copied to the volume every 10 minutes and when the container stops, and a new container restores the latest copy. The very first start creates the simulated demonstration data, as `setup.bat` does.
 - **The model files** live on the volume, so a model retrained in the cloud survives restarts; the previous version is kept beside it.
 - **The session key** is made on the first start and kept on the volume, never in the repository.
